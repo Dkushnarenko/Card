@@ -1,0 +1,73 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+
+public class CardDeck {
+    private static final int CARDS_IN_DECK = 52;
+    private List<Integer> deck;
+    private List<Integer> remainingDeck;
+
+    public CardDeck() {
+        this.deck = new ArrayList<>(CARDS_IN_DECK);
+        this.remainingDeck = new ArrayList<>(CARDS_IN_DECK);
+        
+        // Заполняем колоду числами от 0 до 51, представляющими карты
+        for (int i = 0; i < CARDS_IN_DECK; i++) {
+            deck.add(i);
+            remainingDeck.add(i);
+        }
+    }
+
+    public void shuffle() {
+        Random random = new Random();
+        for (int i = deck.size() - 1; i > 0; i--) {
+            // Меняем местами случайную карту с текущей позицией
+            int j = random.nextInt(i + 1);
+            int temp = deck.get(i);
+            deck.set(i, deck.get(j));
+            deck.set(j, temp);
+        }
+    }
+
+    public void dealCard() {
+        if (remainingDeck.isEmpty()) {
+            throw new IllegalStateException("Колода пуста");
+        }
+        // Выдаем верхнюю карту из колоды
+        int card = deck.get(0);
+        remainingDeck.remove(0);
+        // Удаляем выданную карту из колоды
+        deck.remove(0);
+        System.out.println("Выдана карта: " + card);
+    }
+
+    public void returnCardToDeck(int card) {
+        if (remainingDeck.contains(card)) {
+            throw new IllegalStateException("Карта уже находится в колоде");
+        }
+        // Добавляем карту обратно в колоду
+        remainingDeck.add(card);
+        deck.add(card);
+        System.out.println("Карта возвращена в колоду: " + card);
+    }
+
+    public static void main(String args) {
+        CardDeck deck = new CardDeck();
+        
+        System.out.println("Исходная колода: " + Arrays.toString(deck.deck.toArray()));
+        System.out.println("Оставшаяся колода: " + Arrays.toString(deck.remainingDeck.toArray()));
+        
+        deck.shuffle();
+        System.out.println("Перемешанная колода: " + Arrays.toString(deck.deck.toArray()));
+        System.out.println("Оставшаяся колода: " + Arrays.toString(deck.remainingDeck.toArray()));
+        
+        deck.dealCard();
+        System.out.println("После сдачи карты: " + Arrays.toString(deck.deck.toArray()));
+        System.out.println("Оставшаяся колода: " + Arrays.toString(deck.remainingDeck.toArray()));
+        
+        deck.returnCardToDeck(0);
+        System.out.println("После возвращения карты: " + Arrays.toString(deck.deck.toArray()));
+        System.out.println("Оставшаяся колода: " + Arrays.toString(deck.remainingDeck.toArray()));
+    }
+}
